@@ -1,0 +1,54 @@
+@page "/register/{eventName}"
+@using EventEaseApp.Models
+@inject EventEaseApp.Services.UserSessionService SessionService
+@using Microsoft.AspNetCore.Components.Forms
+
+
+<h3>Register for Event</h3>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+else
+{
+    <EditForm Model="@registration" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label class="form-label">Event</label>
+            <InputText class="form-control" @bind-Value="registration.EventName" Disabled="true" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <InputText class="form-control" @bind-Value="registration.Name" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <InputText class="form-control" @bind-Value="registration.Email" />
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public string? eventName { get; set; }
+
+    private RegistrationModel registration = new();
+    private string? successMessage;
+
+    protected override void OnInitialized()
+    {
+        registration.EventName = eventName;
+    }
+
+    private void HandleValidSubmit()
+    {
+        SessionService.SetUser(registration.Name!);
+        SessionService.RegisterForEvent(registration.EventName!);
+        successMessage = $"Thank you, {registration.Name}! You are registered for {registration.EventName}.";
+        registration = new RegistrationModel { EventName = eventName };
+    }
+}

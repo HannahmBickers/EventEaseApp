@@ -1,0 +1,32 @@
+@page "/my-events"
+@inject EventEaseApp.Services.UserSessionService SessionService
+
+<h3>My Registered Events</h3>
+
+@if (!SessionService.RegisteredEvents.Any())
+{
+    <p>You haven't registered for any events yet.</p>
+}
+else
+{
+    <ul>
+        @foreach (var (eventName, attending) in SessionService.GetEventAttendance())
+        {
+            <li>
+                @eventName
+                <button class="btn btn-sm @(attending ? "btn-success" : "btn-secondary")"
+                        @onclick="() => Toggle(eventName)">
+                    @(attending ? "Attending" : "Not Attending")
+                </button>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private void Toggle(string eventName)
+    {
+        SessionService.ToggleAttendance(eventName);
+        StateHasChanged();
+    }
+}

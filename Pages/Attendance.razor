@@ -1,0 +1,24 @@
+@page "/attendance"
+@using EventEaseApp.Services
+@inject UserSessionService SessionService
+
+<h3>My Registered Events</h3>
+
+@if (!SessionService.GetEventAttendance().Any())
+{
+    <p>You haven't registered for any events yet.</p>
+}
+else
+{
+    <ul>
+        @foreach ((string eventName, bool attending) in SessionService.GetEventAttendance())
+        {
+            <li>
+                @eventName
+                <span class="ml-2 badge @(attending ? "bg-success" : "bg-secondary")">
+                    @(attending ? "Attending" : "Not Attending")
+                </span>
+            </li>
+        }
+    </ul>
+}

@@ -1,0 +1,15 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components
+
+
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(EventEaseApp.Layout.MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(EventEaseApp.Layout.MainLayout)">
+            <p class="text-danger m-3">Oops! The page you're looking for doesn't exist.</p>
+            <NavLink href="/">Return to Events</NavLink>
+        </LayoutView>
+    </NotFound>
+</Router>
